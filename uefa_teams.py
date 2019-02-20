@@ -28,7 +28,7 @@ for group in soup.find_all(class_='group-container'):
 
 base_url = 'https://www.uefa.com/uefachampionsleague/season=2019/clubs/'
 
-columns = ['Team_ID','Position','Name']
+columns = ['Team ID','Position','Name']
 data_players = pd.DataFrame(columns = columns)
 
 for id in data_teams['Team ID']:
@@ -45,9 +45,7 @@ for id in data_teams['Team ID']:
       players_data = pd.DataFrame([[id,pos,player]])
       players_data.columns = columns
       data_players = data_players.append(players_data,ignore_index=True)
-time.sleep(30)
+  time.sleep(30)
 
-print(data_players.tail())
-
-#full_data = pd.merge(data_teams,data_players,how = 'inner', on = 'Team ID')
-#full_data.to_csv('data.csv')
+full_data = pd.merge(data_teams,data_players,how = 'inner', on = 'Team ID')
+full_data.to_csv('data.csv',index = False)
