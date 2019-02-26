@@ -5,15 +5,16 @@ import time
 
 
 data = pd.read_csv('fixtures.csv')
-rnds = data['Round ID'].drop_duplicates().reset_index(drop=True)
-ids = data['Match ID'].drop_duplicates().reset_index(drop=True)
+fix = data[['Round ID','Match ID']].drop_duplicates().reset_index(drop=True)
+
 base_url = 'https://www.uefa.com/uefachampionsleague/season=2019/matches/round='
 
 columns = ['Round','Match_ID','Player','Events','Time']
 data_lineups = pd.DataFrame(columns = columns)
 
-for rnd in rnds:
-  for id in ids:
+for index,row in fix.iterrows():
+    rnd = row['Round ID']
+    id = row['Match ID']
     url = base_url + str(rnd) + '/match=' + str(id) + '/lineups/index.html'
     page = requests.get(url)
     soup = BeautifulSoup(page.text,'html.parser')
@@ -32,6 +33,6 @@ for rnd in rnds:
             lineup_data = pd.DataFrame([[rnd,id,name,None,None]])
             lineup_data.columns = columns
             data_lineups = data_lineups.append(lineup_data,ignore_index=True)
-  time.sleep(30)
+time.sleep(30)
 
 data_lineups.to_csv('lineups.csv',index = False)
