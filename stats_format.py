@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as numpy
 
 df = pd.read_csv('stats.csv')
-df1 = df['Title,Stats'].str[1:-1].str.split(',',expand=True)
+df1 = df['Title,Stats'].str.split(',',expand=True)
 df1.columns = ['Event','Stat']
 df2 = df.drop(['Title,Stats'],axis=1)
 frames = [df2,df1]
@@ -32,4 +32,8 @@ frames2 = [df6,df0,df1]
 
 result2 = pd.concat(frames2,axis=1)
 
-print(result2.head(10))
+df = result2['Event'].str.extract(r'(\w+)')
+
+result2['Event'] =  df.values
+
+result2.to_csv('stats_f.csv',index = False)
